@@ -7,7 +7,7 @@ on:
 
 jobs:
   setup:
-    name: Setup
+    name: Setup (push-ci)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout transformers (push-ci)
