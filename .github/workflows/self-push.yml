@@ -3,7 +3,7 @@ name: Self-hosted runner (push)
 on:
   push:
     branches:
-      - push-ci-none
+      - push-ci
 
 jobs:
   setup:
