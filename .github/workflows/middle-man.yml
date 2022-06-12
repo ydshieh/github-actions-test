@@ -22,3 +22,4 @@ jobs:
         run: |
           git checkout -b push-ci
           git push -u origin push-ci --force
+          echo bonjour
