@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 2
           ssh-key: "${{ secrets.COMMIT_KEY }}"
 
-      - name: Checkout to branch push-ci and push
+      - name: Checkout to [push-ci] and push
         # A more strict way to make sure`push-ci` is exactly the same as `main` at the push event commit.
         run: |
           git checkout -b push-ci
