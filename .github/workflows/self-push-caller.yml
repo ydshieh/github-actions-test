@@ -10,13 +10,13 @@ jobs:
     name: Run Push CI
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout transformers
+      - name: Checkout transformers (main)
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
           ssh-key: "${{ secrets.COMMIT_KEY }}"
 
-      - name: Checkout to branch push-ci
+      - name: Checkout to branch push-ci and push
         # A more strict way to make sure`push-ci` is exactly the same as `main` at the push event commit.
         run: |
           git checkout -b push-ci
