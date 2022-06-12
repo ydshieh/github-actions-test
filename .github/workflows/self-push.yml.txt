@@ -1,0 +1,16 @@
+name: Self-hosted runner (push)
+
+on:
+  push:
+    branches:
+      - push-ci
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout transformers
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
