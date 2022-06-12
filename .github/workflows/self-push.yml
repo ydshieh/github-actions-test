@@ -10,7 +10,7 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout transformers
+      - name: Checkout transformers (push-ci)
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
