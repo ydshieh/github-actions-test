@@ -1,16 +1,15 @@
 name: Self-hosted runner (push)
 
 on:
-  push:
-    branches:
-      - push-ci
+  workflow_run:
+    workflows: ["Self-hosted runner (push-caller)"]
+    branches: ["main"]
+    types: [completed]
 
 jobs:
-  setup:
-    name: Setup (push-ci)
+  run_push_ci:
+    name: Run Push CI
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout transformers (push-ci)
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
+      - name: Checkout transformers
+        run: echo "Trigger push CI via workflow_run"
