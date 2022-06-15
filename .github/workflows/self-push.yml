@@ -3,7 +3,7 @@ name: Self-hosted runner (push)
 on:
   workflow_run:
     workflows: ["Self-hosted runner (push-caller)"]
-    branches: ["main", "bonbon"]
+    branches: ["main", "bonbon", "good"]
     types: [completed]
 
 jobs:
