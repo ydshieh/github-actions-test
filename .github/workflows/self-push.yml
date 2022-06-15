@@ -3,7 +3,7 @@ name: Self-hosted runner (push)
 on:
   workflow_run:
     workflows: ["Self-hosted runner (push-caller)"]
-    branches: ["main", "bonbon"]
+    branches: ["main"]
     types: [completed]
 
 jobs:
@@ -20,11 +20,11 @@ jobs:
           echo "commit url"
           echo ${{ github.event.head_commit.url }}
           echo "more info"
-#          echo ${{ github.event.workflow_run.action }}
-#          echo ${{ github.event.workflow_run.workflow_run.head_branch }}
-#          echo ${{ github.event.workflow_run.workflow_run.head_sha }}
-#          echo ${{ github.event.workflow_run.workflow_run.head_commit.message }}
-#          echo ${{ github.event.workflow_run.workflow_run.head_commit.url }}
+          echo ${{ github.event.workflow_run.action }}
+          echo ${{ github.event.workflow_run.workflow_run.head_branch }}
+          echo ${{ github.event.workflow_run.workflow_run.head_sha }}
+          echo ${{ github.event.workflow_run.workflow_run.head_commit.message }}
+          echo ${{ github.event.workflow_run.workflow_run.head_commit.url }}
           echo ${{ github.event.workflow_run.head_branch }}
           echo ${{ github.event.workflow_run.head_sha }}
           echo ${{ github.event.workflow_run.head_commit.message }}
