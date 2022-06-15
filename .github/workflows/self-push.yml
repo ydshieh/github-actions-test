@@ -22,7 +22,7 @@ jobs:
           echo ${{ github.event.workflow_run.head_sha }}
           echo ${{ github.event.workflow_run.head_commit.message }}
           echo ${{ github.event.workflow_run.head_commit.url }}
-          echo "how are you"
+          echo "how are you 333"
 
       - name: Checkout transformers
         uses: actions/checkout@v2
@@ -30,6 +30,14 @@ jobs:
           fetch-depth: 2
 
       - name: print transformers
+        run: |
+          echo $(git branch)
+          echo $(git log -n 1)
+
+      - name: Update clone
+        run: git fetch && git checkout ${{ github.event.workflow_run.head_branch }} && git checkout ${{ github.event.workflow_run.head_sha }}
+
+      - name: print transformers again
         run: |
           echo $(git branch)
           echo $(git log -n 1)
