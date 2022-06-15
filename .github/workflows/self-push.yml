@@ -13,3 +13,9 @@ jobs:
     steps:
       - name: Checkout transformers
         run: echo "Trigger push CI via workflow_run"
+      - name: print detailed information
+        run: |
+          echo "commit message"
+          echo ${{ github.event.head_commit.message }}
+          echo "commit url"
+          echo ${{ github.event.head_commit.url }}
