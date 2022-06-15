@@ -13,20 +13,23 @@ jobs:
     steps:
       - name: Checkout transformers
         run: echo "Trigger push CI via workflow_run"
+
       - name: print detailed information
         run: |
-          echo "commit message"
-          echo ${{ github.event.head_commit.message }}
-          echo "commit url"
-          echo ${{ github.event.head_commit.url }}
           echo "more info"
-          echo ${{ github.event.workflow_run.action }}
-          echo ${{ github.event.workflow_run.workflow_run.head_branch }}
-          echo ${{ github.event.workflow_run.workflow_run.head_sha }}
-          echo ${{ github.event.workflow_run.workflow_run.head_commit.message }}
-          echo ${{ github.event.workflow_run.workflow_run.head_commit.url }}
+          echo ${{ github.sha }}
           echo ${{ github.event.workflow_run.head_branch }}
           echo ${{ github.event.workflow_run.head_sha }}
           echo ${{ github.event.workflow_run.head_commit.message }}
           echo ${{ github.event.workflow_run.head_commit.url }}
           echo "how are you"
+
+      - name: Checkout transformers
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: print transformers
+        run: |
+          echo $(git branch)
+          echo $(git log -n 1)

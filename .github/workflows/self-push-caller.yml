@@ -19,3 +19,13 @@ jobs:
           echo ${{ github.event.head_commit.message }}
           echo "commit url"
           echo ${{ github.event.head_commit.url }}
+
+      - name: Checkout transformers
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: print transformers
+        run: |
+          echo $(git branch)
+          echo $(git log -n 1)
