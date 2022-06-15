@@ -29,3 +29,6 @@ jobs:
         run: |
           echo $(git branch)
           echo $(git log -n 1)
+
+      - name; Sleep
+        run: sleep 3m
