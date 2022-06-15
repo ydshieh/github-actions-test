@@ -29,3 +29,4 @@ jobs:
           echo ${{ github.event.workflow_run.head_sha }}
           echo ${{ github.event.workflow_run.head_commit.message }}
           echo ${{ github.event.workflow_run.head_commit.url }}
+          echo "how are you"
