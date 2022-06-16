@@ -35,30 +35,34 @@ jobs:
         # CI_BRANCH_PUSH=${{ github.event }}
         # echo $CI_BRANCH
         # echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
+        # echo "CI_BRANCH_WORKFLOW_RUN=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
+        # echo "CI_SHA_PUSH=$CI_SHA_PUSH" >> $GITHUB_ENV
+        # echo "CI_SHA_WORKFLOW_RUN=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
+        # echo "CI_COMMIT_URL_PUSH=$CI_COMMIT_URL_PUSH" >> $GITHUB_ENV
+        # echo "CI_COMMIT_URL_WORKFLOW_RUN=$CI_COMMIT_URL_WORKFLOW_RUN" >> $GITHUB_ENV
+
         run: |
+          CI_BRANCH_PUSH=${{ github.event.ref }}
           CI_BRANCH_WORKFLOW_RUN=${{ github.event.workflow_run.head_branch }}
           CI_SHA_PUSH=${{ github.event.head_commit.id }}
           CI_SHA_WORKFLOW_RUN=${{ github.event.workflow_run.head_sha }}
           CI_COMMIT_URL_PUSH=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.head_commit.id }}
           CI_COMMIT_URL_WORKFLOW_RUN=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
-          echo CI_BRANCH_WORKFLOW_RUN
+          echo $CI_BRANCH_PUSH
+          echo $CI_BRANCH_WORKFLOW_RUN
           echo $CI_SHA_PUSH
           echo $CI_SHA_WORKFLOW_RUN
           echo $CI_COMMIT_URL_PUSH
-          echo $CI_COMMIT_URL_WORKFLOW_RUN
-          echo "CI_BRANCH_WORKFLOW_RUN=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
-          echo "CI_SHA_PUSH=$CI_SHA_PUSH" >> $GITHUB_ENV
-          echo "CI_SHA_WORKFLOW_RUN=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
-          echo "CI_COMMIT_URL_PUSH=$CI_COMMIT_URL_PUSH" >> $GITHUB_ENV
-          echo "CI_COMMIT_URL_WORKFLOW_RUN=$CI_COMMIT_URL_WORKFLOW_RUN" >> $GITHUB_ENV
+          echo $CI_COMMIT_URL_WORKFLOW_RUN          
+          [[ ! -z "$CI_BRANCH_PUSH" ]] && echo "CI_BRANCH=$CI_BRANCH_PUSH" || "CI_BRANCH=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
+          [[ ! -z "$CI_SHA_PUSH" ]] && echo "CI_SHA=$CI_SHA_PUSH" || "CI_SHA=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
+          [[ ! -z "$CI_SHA_PUSH" ]] && echo "CI_COMMIT_URL=$CI_COMMIT_URL_PUSH" || "CI_COMMIT_URL=$CI_COMMIT_URL_WORKFLOW_RUN" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
         run: |
-          echo ${{ env.CI_BRANCH_WORKFLOW_RUN }}
-          echo ${{ env.CI_SHA_PUSH }}
-          echo ${{ env.CI_SHA_WORKFLOW_RUN }}
-          echo ${{ env.CI_COMMIT_URL_PUSH }}
-          echo ${{ env.CI_COMMIT_URL_WORKFLOW_RUN }}
+          echo ${{ env.CI_BRANCH }}
+          echo ${{ env.CI_SHA }}
+          echo ${{ env.CI_COMMIT_URL }}
 
       - name: Checkout transformers
         uses: actions/checkout@v2
@@ -86,10 +90,10 @@ jobs:
 
       - name: Update clone use prepared ENV variables
         run: |
-          git fetch && git checkout ${{ env.CI_BRANCH_WORKFLOW_RUN }}
+          git fetch && git checkout ${{ env.CI_BRANCH }}
           echo $(git branch --show-current)
           echo $(git log -n 1)
-          git checkout ${{ env.CI_SHA_WORKFLOW_RUN }}
+          git checkout ${{ env.CI_SHA }}
           echo $(git branch --show-current)
           echo $(git log -n 1)
 
