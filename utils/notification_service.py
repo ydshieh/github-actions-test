@@ -613,7 +613,7 @@ if __name__ == "__main__":
 
     ci_url = None
     if ci_sha:
-        ci_url = f"https://github.com/${repository_full_name}/commit/{ci_sha}"
+        ci_url = f"https://github.com/{repository_full_name}/commit/{ci_sha}"
 
     ####################
     print(f"ci_title: {ci_title}")
