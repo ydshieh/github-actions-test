@@ -148,11 +148,11 @@ jobs:
         env:
           CI_EVENT: push
           CI_TITLE: ${{ env.CI_TITLE }}
-          CI_COMMIT_URL: ${{ env.$CI_COMMIT_URL }}
+          CI_COMMIT_URL: ${{ env.CI_COMMIT_URL }}
         # We pass `needs.setup.outputs.matrix` as the argument. A processing in `notification_service.py` to change
         # `models/bert` to `models_bert` is required, as the artifact names use `_` instead of `/`.
+        # python utils/notification_service.py
         run: |
           echo $CI_EVENT
           echo $CI_TITLE
           echo $CI_COMMIT_URL
-          python utils/notification_service.py
