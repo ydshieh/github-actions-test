@@ -37,10 +37,10 @@ jobs:
           CI_SHA=${{ github.event.workflow_run.head_sha }}
           CI_TITLE="${{ github.event.workflow_run.head_commit.message }}"
           CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
-          echo "$CI_BRANCH"
-          echo "$CI_SHA"
+          echo $CI_BRANCH
+          echo $CI_SHA
           echo $CI_TITLE
-          echo "$CI_COMMIT_URL"
+          echo $CI_COMMIT_URL
           echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
           echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
           echo "CI_TITLE=$CI_TITLE" >> $GITHUB_ENV
@@ -107,10 +107,10 @@ jobs:
           CI_SHA=${{ github.event.workflow_run.head_sha }}
           CI_TITLE="${{ github.event.workflow_run.head_commit.message }}"
           CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
-          echo "$CI_BRANCH"
-          echo "$CI_SHA"
-          echo "$CI_TITLE"
-          echo "$CI_COMMIT_URL"
+          echo $CI_BRANCH
+          echo $CI_SHA
+          echo $CI_TITLE
+          echo $CI_COMMIT_URL
           echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
           echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
           echo "CI_TITLE=$CI_TITLE" >> $GITHUB_ENV
