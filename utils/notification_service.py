@@ -645,7 +645,7 @@ if __name__ == "__main__":
 
         if len(numbers) > 0:
             pr_number = numbers[0]
-            ci_detail_url = f"https://api.github.com/repos/{{repository_full_name}}/pulls/{pr_number}"
+            ci_detail_url = f"https://api.github.com/repos/{repository_full_name}/pulls/{pr_number}"
             ci_details = requests.get(ci_detail_url).json()
 
             ci_author = ci_details["user"]["login"]
