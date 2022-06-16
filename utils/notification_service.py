@@ -605,8 +605,17 @@ if __name__ == "__main__":
 
     title = f"🤗 Results of the {ci_event} tests."
     # Add PR title with a link for push CI
-    ci_title = os.environ.get("CI_TITLE")
-    ci_url = os.environ.get("CI_COMMIT_URL")
+    ci_title_push = os.environ.get("CI_TITLE_PUSH")
+    ci_title_workflow_run = os.environ.get("CI_TITLE_WORKFLOW_RUN")
+    ci_title = ci_title_push if ci_title_push is not None else ci_title_workflow_run
+
+    ci_sha_push = os.environ.get("CI_SHA_PUSH")
+    ci_sha_workflow_run = os.environ.get("CI_SHA_WORKFLOW_RUN")
+    ci_sha = ci_sha_push if ci_sha_push is not None else ci_sha_workflow_run
+
+    ci_url = None
+    if ci_sha is not None:
+        ci_url = f"https://github.com/${repository_full_name}/commit/{ci_sha}"
 
     ####################
     print(f"ci_title: {ci_title}")

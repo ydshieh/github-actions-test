@@ -32,23 +32,33 @@ jobs:
         # More general
         # CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
         # [IMPORTANT] `echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV` can't have new line character `\n`
+        # CI_BRANCH_PUSH=${{ github.event }}
+        # echo $CI_BRANCH
+        # echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
         run: |
-          CI_BRANCH=${{ github.event.workflow_run.head_branch }}
-          CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
-          echo $CI_BRANCH
-          echo $CI_SHA
-          echo $CI_COMMIT_URL
-          echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
-          echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
-          echo "CI_COMMIT_URL=$CI_COMMIT_URL" >> $GITHUB_ENV
+          CI_BRANCH_WORKFLOW_RUN=${{ github.event.workflow_run.head_branch }}
+          CI_SHA_PUSH=${{ github.event.head_commit.id }}
+          CI_SHA_WORKFLOW_RUN=${{ github.event.workflow_run.head_sha }}
+          CI_COMMIT_URL_PUSH=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.head_commit.id }}
+          CI_COMMIT_URL_WORKFLOW_RUN=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
+          echo CI_BRANCH_WORKFLOW_RUN
+          echo $CI_SHA_PUSH
+          echo $CI_SHA_WORKFLOW_RUN
+          echo $CI_COMMIT_URL_PUSH
+          echo $CI_COMMIT_URL_WORKFLOW_RUN
+          echo "CI_BRANCH_WORKFLOW_RUN=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
+          echo "CI_SHA_PUSH=$CI_SHA_PUSH" >> $GITHUB_ENV
+          echo "CI_SHA_WORKFLOW_RUN=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
+          echo "CI_COMMIT_URL_PUSH=$CI_COMMIT_URL_PUSH" >> $GITHUB_ENV
+          echo "CI_COMMIT_URL_WORKFLOW_RUN=$CI_COMMIT_URL_WORKFLOW_RUN" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
         run: |
-          echo ${{ env.CI_BRANCH }}
-          echo ${{ env.CI_SHA }}
-
-          echo ${{ env.CI_COMMIT_URL }}
+          echo ${{ env.CI_BRANCH_WORKFLOW_RUN }}
+          echo ${{ env.CI_SHA_PUSH }}
+          echo ${{ env.CI_SHA_WORKFLOW_RUN }}
+          echo ${{ env.CI_COMMIT_URL_PUSH }}
+          echo ${{ env.CI_COMMIT_URL_WORKFLOW_RUN }}
 
       - name: Checkout transformers
         uses: actions/checkout@v2
@@ -76,10 +86,10 @@ jobs:
 
       - name: Update clone use prepared ENV variables
         run: |
-          git fetch && git checkout ${{ env.CI_BRANCH }}
+          git fetch && git checkout ${{ env.CI_BRANCH_WORKFLOW_RUN }}
           echo $(git branch --show-current)
           echo $(git log -n 1)
-          git checkout ${{ env.CI_SHA }}
+          git checkout ${{ env.CI_SHA_WORKFLOW_RUN }}
           echo $(git branch --show-current)
           echo $(git log -n 1)
 
@@ -100,52 +110,51 @@ jobs:
         # More general
         # CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
         run: |
-          CI_BRANCH=${{ github.event.workflow_run.head_branch }}
-          CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
-          echo $CI_BRANCH
-          echo $CI_SHA
-          echo $CI_COMMIT_URL
-          echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
-          echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
-          echo "CI_COMMIT_URL=$CI_COMMIT_URL" >> $GITHUB_ENV
+          CI_BRANCH_WORKFLOW_RUN=${{ github.event.workflow_run.head_branch }}
+          CI_SHA_PUSH=${{ github.event.head_commit.id }}
+          CI_SHA_WORKFLOW_RUN=${{ github.event.workflow_run.head_sha }}
+          CI_COMMIT_URL_PUSH=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.head_commit.id }}
+          CI_COMMIT_URL_WORKFLOW_RUN=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
+          echo CI_BRANCH_WORKFLOW_RUN
+          echo $CI_SHA_PUSH
+          echo $CI_SHA_WORKFLOW_RUN
+          echo $CI_COMMIT_URL_PUSH
+          echo $CI_COMMIT_URL_WORKFLOW_RUN
+          echo "CI_BRANCH_WORKFLOW_RUN=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
+          echo "CI_SHA_PUSH=$CI_SHA_PUSH" >> $GITHUB_ENV
+          echo "CI_SHA_WORKFLOW_RUN=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
+          echo "CI_COMMIT_URL_PUSH=$CI_COMMIT_URL_PUSH" >> $GITHUB_ENV
+          echo "CI_COMMIT_URL_WORKFLOW_RUN=$CI_COMMIT_URL_WORKFLOW_RUN" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
         run: |
-          echo ${{ env.CI_BRANCH }}
-          echo ${{ env.CI_SHA }}
-          echo ${{ env.CI_COMMIT_URL }} 
+          echo ${{ env.CI_BRANCH_WORKFLOW_RUN }}
+          echo ${{ env.CI_SHA_PUSH }}
+          echo ${{ env.CI_SHA_WORKFLOW_RUN }}
+          echo ${{ env.CI_COMMIT_URL_PUSH }}
+          echo ${{ env.CI_COMMIT_URL_WORKFLOW_RUN }}
 
       - name: Checkout transformers
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
 
-      - name: Update clone use prepared ENV variables
-        run: |
-          git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
-          git checkout ${{ env.CI_SHA }}
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
-
-      - name: print transformers  after updating clone using prepared ENV variables
-        run: |
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
-
       - uses: actions/download-artifact@v2
 
       - name: Send message to Slack
         env:
           CI_EVENT: push
-          CI_TITLE: ${{ github.event.workflow_run.head_commit.message }}
-          CI_COMMIT_URL: ${{ env.CI_COMMIT_URL }}
+          CI_TITLE_PUSH: ${{ github.event.head_commit.message }}
+          CI_TITLE_WORKFLOW_RUN: ${{ github.event.workflow_run.head_commit.message }}
+          CI_SHA_PUSH: ${{ env.CI_SHA_PUSH }}
+          CI_SHA_WORKFLOW_RUN: ${{ env.CI_SHA_WORKFLOW_RUN }}
         # We pass `needs.setup.outputs.matrix` as the argument. A processing in `notification_service.py` to change
         # `models/bert` to `models_bert` is required, as the artifact names use `_` instead of `/`.
         # python utils/notification_service.py
         run: |
           echo $CI_EVENT
-          echo $CI_COMMIT_URL
+          echo $CI_TITLE_PUSH
+          echo $CI_TITLE_WORKFLOW_RUN
+          echo $CI_COMMIT_URL_PUSH
+          echo $CI_COMMIT_URL_WORKFLOW_RUN
           python utils/notification_service.py
