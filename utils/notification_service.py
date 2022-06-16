@@ -588,6 +588,10 @@ if __name__ == "__main__":
     # temporary
     org = "huggingface"
     repo = "transformers"
+
+    org = "ydshieh"
+    repo = "github-actions-test"
+
     repository_full_name = f"{org}/{repo}"
     # ====================================================================================================
 
