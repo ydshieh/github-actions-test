@@ -39,9 +39,9 @@ jobs:
 
       - name: print prepared ENV variables
         run: |
-          echo ${{ env.CI_BRANCH }}
-          echo ${{ env.CI_SHA }}
-          echo ${{ env.CI_COMMIT_URL }}
+          echo "env.CI_BRANCH = ${{ env.CI_BRANCH }}"
+          echo "env.CI_SHA = ${{ env.CI_SHA }}"
+          echo "env.CI_COMMIT_URL = ${{ env.CI_COMMIT_URL }}"
 
       - name: Checkout transformers
         uses: actions/checkout@v2
@@ -50,22 +50,18 @@ jobs:
 
       - name: print transformers after actions/checkout@v2
         run: |
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
+          echo "branch = $(git branch --show-current)"
+          echo "log = $(git log -n 1)"
 
       - name: Update clone use prepared ENV variables
         run: |
           git fetch && git checkout ${{ env.CI_BRANCH }}
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
           git checkout ${{ env.CI_SHA }}
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
 
       - name: print transformers  after updating clone using prepared ENV variables
         run: |
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
+          echo "branch = $(git branch --show-current)"
+          echo "log = $(git log -n 1)"
 
   send_results:
     name: Send results to webhook
@@ -84,7 +80,7 @@ jobs:
 
       - name: print prepared ENV variables
         run: |
-          echo ${{ env.CI_SHA }}
+          echo "CI_SHA = ${{ env.CI_SHA }}"
 
       - name: Checkout transformers
         uses: actions/checkout@v2
