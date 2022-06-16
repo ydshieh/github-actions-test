@@ -63,19 +63,19 @@ jobs:
           echo $(git branch --show-current)
           echo $(git log -n 1)
 
-      - name: Update clone
-        run: |
-          git fetch && git checkout ${{ github.event.workflow_run.head_branch }}
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
-          git checkout ${{ github.event.workflow_run.head_sha }}
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
-
-      - name: print transformers after updating clone
-        run: |
-          echo $(git branch --show-current)
-          echo $(git log -n 1)
+#      - name: Update clone
+#        run: |
+#          git fetch && git checkout ${{ github.event.workflow_run.head_branch }}
+#          echo $(git branch --show-current)
+#          echo $(git log -n 1)
+#          git checkout ${{ github.event.workflow_run.head_sha }}
+#          echo $(git branch --show-current)
+#          echo $(git log -n 1)
+#
+#      - name: print transformers after updating clone
+#        run: |
+#          echo $(git branch --show-current)
+#          echo $(git log -n 1)
 
       - name: Update clone use prepared ENV variables
         run: |
