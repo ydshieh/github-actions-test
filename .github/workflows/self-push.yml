@@ -156,3 +156,4 @@ jobs:
           echo $CI_EVENT
           echo $CI_TITLE
           echo $CI_COMMIT_URL
+          python utils/notification_service.py

@@ -25,24 +25,24 @@ import time
 from typing import Dict, List, Optional, Union
 
 import requests
-from slack_sdk import WebClient
-
-
-client = WebClient(token=os.environ["CI_SLACK_BOT_TOKEN"])
-
-NON_MODEL_TEST_MODULES = [
-    "benchmark",
-    "deepspeed",
-    "extended",
-    "fixtures",
-    "generation",
-    "onnx",
-    "optimization",
-    "pipelines",
-    "sagemaker",
-    "trainer",
-    "utils",
-]
+# from slack_sdk import WebClient
+#
+#
+# client = WebClient(token=os.environ["CI_SLACK_BOT_TOKEN"])
+#
+# NON_MODEL_TEST_MODULES = [
+#     "benchmark",
+#     "deepspeed",
+#     "extended",
+#     "fixtures",
+#     "generation",
+#     "onnx",
+#     "optimization",
+#     "pipelines",
+#     "sagemaker",
+#     "trainer",
+#     "utils",
+# ]
 
 
 def handle_test_results(test_results):
