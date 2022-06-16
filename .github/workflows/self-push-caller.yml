@@ -29,4 +29,3 @@ jobs:
         run: |
           echo $(git branch)
           echo $(git log -n 1)
-          echo "OK"

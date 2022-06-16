@@ -3,18 +3,22 @@ name: Self-hosted runner (push)
 on:
   workflow_run:
     workflows: ["Self-hosted runner (push-caller)"]
-    branches: ["main", "bonbon", "good"]
+    branches: ["main", "bonbon"]
     types: [completed]
 
 jobs:
   run_push_ci:
+
     name: Run Push CI
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout transformers
-        run: echo "Trigger push CI via workflow_run"
+
+      - name: Run actual push CI
+        run: echo "Run actual push CI"
 
       - name: print detailed information
+        # For push even, we have `${{ github.event.head_commit.message }}` and `${{ github.event.head_commit.url }}`
+        # For workflow_run, we need `${{ github.event.workflow_run.head_xxx ... }}`
         run: |
           echo "more info"
           echo ${{ github.sha }}
@@ -22,14 +26,36 @@ jobs:
           echo ${{ github.event.workflow_run.head_sha }}
           echo ${{ github.event.workflow_run.head_commit.message }}
           echo ${{ github.event.workflow_run.head_commit.url }}
-          echo "how are you 333"
+          echo "done"
+
+      - name: Prepare custom ENV variables
+        run: |
+          CI_BRANCH=${{ github.event.workflow_run.head_branch }}
+          CI_SHA=${{ github.event.workflow_run.head_sha }}
+          CI_TITLE=${{ github.event.workflow_run.head_commit.message }}
+          CI_COMMIT_URL=https://github.com/huggingface/transformers/commit/${{ github.event.workflow_run.head_sha }}
+          echo "$CI_BRANCH"
+          echo "$CI_SHA"
+          echo "$CI_TITLE"
+          echo "$CI_COMMIT_URL"
+          echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
+          echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
+          echo "CI_TITLE=$CI_TITLE" >> $GITHUB_ENV
+          echo "CI_COMMIT_URL=$CI_COMMIT_URL" >> $GITHUB_ENV
+
+      - name: print prepared ENV variables
+        run: |
+          echo ${{ env.CI_BRANCH }}
+          echo ${{ env.CI_SHA }}
+          echo ${{ env.CI_TITLE }}
+          echo ${{ env.CI_COMMIT_URL }}
 
       - name: Checkout transformers
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
 
-      - name: print transformers
+      - name: print transformers after actions/checkout@v2
         run: |
           echo $(git branch)
           echo $(git log -n 1)
@@ -37,7 +63,15 @@ jobs:
       - name: Update clone
         run: git fetch && git checkout ${{ github.event.workflow_run.head_branch }} && git checkout ${{ github.event.workflow_run.head_sha }}
 
-      - name: print transformers again
+      - name: print transformers after updating clone
+        run: |
+          echo $(git branch)
+          echo $(git log -n 1)
+
+      - name: Update clone use prepared ENV variables
+        run: git fetch && git checkout ${{ env.CI_BRANCH }} && git checkout ${{ env.CI_SHA }}
+
+      - name: print transformers  after updating clone using prepared ENV variables
         run: |
           echo $(git branch)
           echo $(git log -n 1)
