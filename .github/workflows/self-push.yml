@@ -36,7 +36,7 @@ jobs:
         run: |
           CI_BRANCH=${{ github.event.workflow_run.head_branch }}
           CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_TITLE=$(python -c 'd = ${{ github.event.workflow_run.head_commit.message }}; d = d.split("\n")[0]; print(d)')
+          CI_TITLE=$(python -c 'd = "${{ github.event.workflow_run.head_commit.message }}"; d = d.split("\n")[0]; print(d)')
           CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
           echo $CI_BRANCH
           echo $CI_SHA
