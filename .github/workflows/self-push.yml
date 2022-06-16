@@ -24,7 +24,7 @@ jobs:
           echo ${{ github.sha }}
           echo ${{ github.event.workflow_run.head_branch }}
           echo ${{ github.event.workflow_run.head_sha }}
-          echo ${{ github.event.workflow_run.head_commit.message }}
+          echo "${{ github.event.workflow_run.head_commit.message }}"
           echo ${{ github.event.workflow_run.head_commit.url }}
           echo "done"
 
