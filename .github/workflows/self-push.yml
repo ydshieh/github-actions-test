@@ -31,12 +31,12 @@ jobs:
       - name: Prepare custom ENV variables
         # CI_COMMIT_URL=https://github.com/huggingface/transformers/commit/${{ github.event.workflow_run.head_sha }}
         # More general
-        # CI_COMMIT_URL=https://github.com/${{ github.event.repo.name }}/commit/${{ github.event.workflow_run.head_sha }}
+        # CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
         run: |
           CI_BRANCH=${{ github.event.workflow_run.head_branch }}
           CI_SHA=${{ github.event.workflow_run.head_sha }}
           CI_TITLE="${{ github.event.workflow_run.head_commit.message }}"
-          CI_COMMIT_URL=https://github.com/${{ github.event.repo.name }}/commit/${{ github.event.workflow_run.head_sha }}
+          CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
           echo "$CI_BRANCH"
           echo "$CI_SHA"
           echo "$CI_TITLE"
