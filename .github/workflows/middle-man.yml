@@ -7,7 +7,7 @@ on:
     types: [completed]
 
 jobs:
-  run_push_ci:
+  run_push_ci 3
     name: Run Push CI 2
     runs-on: ubuntu-latest
     steps:
