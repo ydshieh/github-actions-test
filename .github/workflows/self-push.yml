@@ -80,7 +80,6 @@ jobs:
           CI_SHA_WORKFLOW_RUN=${{ github.event.workflow_run.head_sha }}
           echo $CI_SHA_PUSH
           echo $CI_SHA_WORKFLOW_RUN       
-          [[ ! -z "$CI_BRANCH_PUSH" ]] && echo "CI_BRANCH=$CI_BRANCH_PUSH" >> $GITHUB_ENV || "CI_BRANCH=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
           [[ ! -z "$CI_SHA_PUSH" ]] && echo "CI_SHA=$CI_SHA_PUSH" >> $GITHUB_ENV || "CI_SHA=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
