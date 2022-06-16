@@ -32,7 +32,7 @@ jobs:
         run: |
           CI_BRANCH=${{ github.event.workflow_run.head_branch }}
           CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_TITLE=${{ github.event.workflow_run.head_commit.message }}
+          CI_TITLE="${{ github.event.workflow_run.head_commit.message }}"
           CI_COMMIT_URL=https://github.com/huggingface/transformers/commit/${{ github.event.workflow_run.head_sha }}
           echo "$CI_BRANCH"
           echo "$CI_SHA"
