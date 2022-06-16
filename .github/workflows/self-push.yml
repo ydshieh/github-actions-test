@@ -43,6 +43,7 @@ jobs:
           echo $CI_COMMIT_URL
           echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
           echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
+          echo "CI_TITLE=$CI_TITLE" >> $GITHUB_ENV
           echo "CI_COMMIT_URL=$CI_COMMIT_URL" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
