@@ -24,7 +24,7 @@ jobs:
           echo ${{ github.sha }}
           echo ${{ github.event.workflow_run.head_branch }}
           echo ${{ github.event.workflow_run.head_sha }}
-          echo ${{ github.event.workflow_run.head_commit.message }}
+          echo "${{ github.event.workflow_run.head_commit.message }}"
           echo ${{ github.event.workflow_run.head_commit.url }}
           echo "done"
 
@@ -35,7 +35,7 @@ jobs:
         run: |
           CI_BRANCH=${{ github.event.workflow_run.head_branch }}
           CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_TITLE="${{ github.event.workflow_run.head_commit.message }}"
+          CI_TITLE=${{ github.event.workflow_run.head_commit.message }}
           CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
           echo "$CI_BRANCH"
           echo "$CI_SHA"
