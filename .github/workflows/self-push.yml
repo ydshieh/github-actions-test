@@ -24,7 +24,6 @@ jobs:
           echo ${{ github.sha }}
           echo ${{ github.event.workflow_run.head_branch }}
           echo ${{ github.event.workflow_run.head_sha }}
-          echo "${{ github.event.workflow_run.head_commit.message }}"
           echo ${{ github.event.workflow_run.head_commit.url }}
           echo "done"
 
@@ -36,22 +35,19 @@ jobs:
         run: |
           CI_BRANCH=${{ github.event.workflow_run.head_branch }}
           CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_TITLE=$(python -c 'd = "${{ github.event.workflow_run.head_commit.message }}"; d = d.split("\n")[0]; print(d)')
           CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
           echo $CI_BRANCH
           echo $CI_SHA
-          echo $CI_TITLE
           echo $CI_COMMIT_URL
           echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
           echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
-          echo "CI_TITLE=$CI_TITLE" >> $GITHUB_ENV
           echo "CI_COMMIT_URL=$CI_COMMIT_URL" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
         run: |
           echo ${{ env.CI_BRANCH }}
           echo ${{ env.CI_SHA }}
-          echo "${{ env.CI_TITLE }}"
+
           echo ${{ env.CI_COMMIT_URL }}
 
       - name: Checkout transformers
@@ -106,22 +102,18 @@ jobs:
         run: |
           CI_BRANCH=${{ github.event.workflow_run.head_branch }}
           CI_SHA=${{ github.event.workflow_run.head_sha }}
-          CI_TITLE="${{ github.event.workflow_run.head_commit.message }}"
           CI_COMMIT_URL=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
           echo $CI_BRANCH
           echo $CI_SHA
-          echo $CI_TITLE
           echo $CI_COMMIT_URL
           echo "CI_BRANCH=$CI_BRANCH" >> $GITHUB_ENV
           echo "CI_SHA=$CI_SHA" >> $GITHUB_ENV
-          echo "CI_TITLE=$CI_TITLE" >> $GITHUB_ENV
           echo "CI_COMMIT_URL=$CI_COMMIT_URL" >> $GITHUB_ENV
 
       - name: print prepared ENV variables
         run: |
           echo ${{ env.CI_BRANCH }}
           echo ${{ env.CI_SHA }}
-          echo "${{ env.CI_TITLE }}"
           echo ${{ env.CI_COMMIT_URL }} 
 
       - name: Checkout transformers
@@ -148,13 +140,12 @@ jobs:
       - name: Send message to Slack
         env:
           CI_EVENT: push
-          CI_TITLE: ${{ env.CI_TITLE }}
+          CI_TITLE: ${{ github.event.workflow_run.head_commit.message }}
           CI_COMMIT_URL: ${{ env.CI_COMMIT_URL }}
         # We pass `needs.setup.outputs.matrix` as the argument. A processing in `notification_service.py` to change
         # `models/bert` to `models_bert` is required, as the artifact names use `_` instead of `/`.
         # python utils/notification_service.py
         run: |
           echo $CI_EVENT
-          echo $CI_TITLE
           echo $CI_COMMIT_URL
           python utils/notification_service.py
