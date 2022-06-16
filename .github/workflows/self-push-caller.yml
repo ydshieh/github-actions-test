@@ -30,6 +30,3 @@ jobs:
           echo $(git branch)
           echo $(git log -n 1)
           echo "OK"
-
-      - name: Sleep33
-        run: sleep 3m
