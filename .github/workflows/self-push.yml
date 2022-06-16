@@ -64,7 +64,13 @@ jobs:
           echo $(git log -n 1)
 
       - name: Update clone
-        run: git fetch && git checkout ${{ github.event.workflow_run.head_branch }} && git checkout ${{ github.event.workflow_run.head_sha }}
+        run: |
+          git fetch && git checkout ${{ github.event.workflow_run.head_branch }}
+          echo $(git branch)
+          echo $(git log -n 1)
+          git checkout ${{ github.event.workflow_run.head_sha }}
+          echo $(git branch)
+          echo $(git log -n 1)
 
       - name: print transformers after updating clone
         run: |
@@ -72,7 +78,13 @@ jobs:
           echo $(git log -n 1)
 
       - name: Update clone use prepared ENV variables
-        run: git fetch && git checkout ${{ env.CI_BRANCH }} && git checkout ${{ env.CI_SHA }}
+        run: |
+          git fetch && git checkout ${{ env.CI_BRANCH }}
+          echo $(git branch)
+          echo $(git log -n 1)
+          git checkout ${{ env.CI_SHA }}
+          echo $(git branch)
+          echo $(git log -n 1)
 
       - name: print transformers  after updating clone using prepared ENV variables
         run: |
