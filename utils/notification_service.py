@@ -584,6 +584,13 @@ def retrieve_available_artifacts():
 
 if __name__ == "__main__":
 
+    # ====================================================================================================
+    # temporary
+    org = "huggingface"
+    repo = "transformers"
+    repository_full_name = f"{org}/{repo}"
+    # ====================================================================================================
+
     # This env. variable is set in workflow file (under the job `send_results`).
     ci_event = os.environ["CI_EVENT"]
 
@@ -603,7 +610,7 @@ if __name__ == "__main__":
 
         # Retrieve the PR title and author login to complete the report
         commit_number = ci_url.split("/")[-1]
-        ci_detail_url = f"https://api.github.com/repos/huggingface/transformers/commits/{commit_number}"
+        ci_detail_url = f"https://api.github.com/repos/{repository_full_name}/commits/{commit_number}"
         ci_details = requests.get(ci_detail_url).json()
         ci_author = ci_details["author"]["login"]
 
@@ -612,11 +619,11 @@ if __name__ == "__main__":
         numbers = pr_number_re.findall(ci_title)
         if len(numbers) > 0:
             pr_number = numbers[0]
-            ci_detail_url = f"https://api.github.com/repos/huggingface/transformers/pulls/{pr_number}"
+            ci_detail_url = f"https://api.github.com/repos/{{repository_full_name}}/pulls/{pr_number}"
             ci_details = requests.get(ci_detail_url).json()
 
             ci_author = ci_details["user"]["login"]
-            ci_url = f"https://github.com/huggingface/transformers/pull/{pr_number}"
+            ci_url = f"https://github.com/{repository_full_name}/pull/{pr_number}"
 
             merged_by = ci_details["merged_by"]["login"]
 
