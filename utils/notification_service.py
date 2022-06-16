@@ -608,6 +608,10 @@ if __name__ == "__main__":
     ci_title = os.environ.get("CI_TITLE")
     ci_url = os.environ.get("CI_COMMIT_URL")
 
+    ####################
+    print(f"ci_title: {ci_title}")
+    print(f"ci_url: {ci_url}")
+
     if ci_title is not None:
         assert ci_url is not None
         ci_title = ci_title.strip().split("\n")[0].strip()
@@ -621,6 +625,14 @@ if __name__ == "__main__":
         merged_by = None
         # Find the PR number (if any) and change the url to the actual PR page.
         numbers = pr_number_re.findall(ci_title)
+
+        ####################
+        print(f"commit_number: {commit_number}")
+        print(f"ci_detail_url: {ci_detail_url}")
+        print(f"ci_details: {ci_details}")
+        print(f"ci_author: {ci_author}")
+        print(f"numbers: {numbers}")
+
         if len(numbers) > 0:
             pr_number = numbers[0]
             ci_detail_url = f"https://api.github.com/repos/{{repository_full_name}}/pulls/{pr_number}"
@@ -631,10 +643,20 @@ if __name__ == "__main__":
 
             merged_by = ci_details["merged_by"]["login"]
 
+            ####################
+            print(f"pr_number: {pr_number}")
+            print(f"ci_detail_url: {ci_detail_url}")
+            print(f"ci_details: {ci_details}")
+            print(f"ci_author: {ci_author}")
+            print(f"ci_url: {ci_url}")
+
         if merged_by is None:
             ci_title = f"<{ci_url}|{ci_title}>\nAuthor: {ci_author}"
         else:
             ci_title = f"<{ci_url}|{ci_title}>\nAuthor: {ci_author} | Merged by: {merged_by}"
+
+        ####################
+        print(f"ci_title: {ci_title}")
 
     else:
         ci_title = ""
