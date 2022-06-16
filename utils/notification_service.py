@@ -627,6 +627,7 @@ if __name__ == "__main__":
         numbers = pr_number_re.findall(ci_title)
 
         ####################
+        print(f"ci_title: {ci_title}")
         print(f"commit_number: {commit_number}")
         print(f"ci_detail_url: {ci_detail_url}")
         print(f"ci_details: {ci_details}")
