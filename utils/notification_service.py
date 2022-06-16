@@ -609,9 +609,7 @@ if __name__ == "__main__":
     ci_title_workflow_run = os.environ.get("CI_TITLE_WORKFLOW_RUN")
     ci_title = ci_title_push if ci_title_push else ci_title_workflow_run
 
-    ci_sha_push = os.environ.get("CI_SHA_PUSH")
-    ci_sha_workflow_run = os.environ.get("CI_SHA_WORKFLOW_RUN")
-    ci_sha = ci_sha_push if ci_sha_push else ci_sha_workflow_run
+    ci_sha = os.environ.get("CI_SHA")
 
     ci_url = None
     if ci_sha:
