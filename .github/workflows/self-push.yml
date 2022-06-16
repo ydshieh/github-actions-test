@@ -120,7 +120,7 @@ jobs:
         run: |
           echo ${{ env.CI_BRANCH }}
           echo ${{ env.CI_SHA }}
-          echo ${{ env.CI_TITLE }}
+          echo "${{ env.CI_TITLE }}"
           echo ${{ env.CI_COMMIT_URL }} 
 
       - name: Checkout transformers
