@@ -5,6 +5,9 @@ on:
     workflows: ["Self-hosted runner (push-caller)"]
     branches: ["main", "bonbon"]
     types: [completed]
+  push:
+    branches:
+      - bonbon
 
 jobs:
   run_push_ci:
