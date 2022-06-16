@@ -9,7 +9,7 @@ on:
 
 jobs:
   call_push_ci:
-    name: Run Push CI
+    name: Run Push CI 2
     runs-on: ubuntu-latest
     steps:
       - name: Checkout transformers
