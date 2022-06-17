@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main-none
-      - bonbon
+      - bonbon-none
 
 jobs:
   call_push_ci:
