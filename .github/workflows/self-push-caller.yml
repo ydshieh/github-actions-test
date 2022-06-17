@@ -32,4 +32,3 @@ jobs:
         run: |
           echo $(git branch)
           echo $(git log -n 1)
-          sleep 3m
