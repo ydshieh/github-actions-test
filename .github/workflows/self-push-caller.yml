@@ -9,7 +9,7 @@ on:
 
 jobs:
   call_push_ci:
-    name: Call Push CI 2345678
+    name: Call Push CI 2345
     runs-on: ubuntu-latest
     steps:
       - name: Check branch
