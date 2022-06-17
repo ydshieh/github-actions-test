@@ -4,8 +4,8 @@ name: Self-hosted runner (push-caller)
 on:
   push:
     branches:
-      - main-none
-      - bonbon
+      - main
+      - bonbon-none
 
 jobs:
   call_push_ci:
