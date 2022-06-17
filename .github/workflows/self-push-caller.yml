@@ -4,18 +4,18 @@ name: Self-hosted runner (push-caller)
 on:
   push:
     branches:
-      - main-none
-      - bonbon
+      - main
+      - bonbon-none
 
 jobs:
   call_push_ci:
-    name: Run Push CI 2345678
+    name: Call Push CI 2345678
     runs-on: ubuntu-latest
     steps:
       - name: Check branch
         run: |
+          echo "${{ github.sha }}"
           sleep 3m
-          echo "{{ github.sha }}"
         # run: echo "${{ toJson(github.event) }}"
 
 #      - name: Checkout transformers
