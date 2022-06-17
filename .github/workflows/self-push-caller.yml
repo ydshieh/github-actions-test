@@ -15,7 +15,7 @@ jobs:
       - name: Check branch
         run: |
           echo "${{ github.sha }}"
-          sleep 3m
+
         # run: echo "${{ toJson(github.event) }}"
 
 #      - name: Checkout transformers
