@@ -627,6 +627,7 @@ if __name__ == "__main__":
         print(f"ci_url = {ci_url}")
 
     if ci_title is not None:
+        ci_url = None
         if ci_url is None:
             raise ValueError(
                 "When a title is found (`ci_title`), it means a `push` event or a `workflow_run` even "
