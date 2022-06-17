@@ -7,7 +7,7 @@ on:
     types: [completed]
   push:
     branches:
-      - main
+      - bonbon
 
 jobs:
   run_tests_single_gpu:
