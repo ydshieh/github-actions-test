@@ -3,93 +3,90 @@ name: Self-hosted runner (push)
 on:
   workflow_run:
     workflows: ["Self-hosted runner (push-caller)"]
-    branches: ["main-none", "bonbon-none"]
+    branches: ["main", "bonbon-none"]
     types: [completed]
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
 
 jobs:
-  run_push_ci:
-
-    name: Run Push CI
+  run_tests_single_gpu:
     runs-on: ubuntu-latest
     steps:
-
-      - name: Run actual push CI
-        run: echo "Run actual push CI"
-
-      - name: Prepare custom ENV variables
+      # Necessary to get the correct branch name and commit SHA for `workflow_run` event
+      # We also take into account the `push` event (we might want to test some changes in a branch)
+      - name: Prepare custom environment variables
+        shell: bash
         run: |
           CI_BRANCH_PUSH=${{ github.event.ref }}
           CI_BRANCH_PUSH=${CI_BRANCH_PUSH/'refs/heads/'/''}
           CI_BRANCH_WORKFLOW_RUN=${{ github.event.workflow_run.head_branch }}
           CI_SHA_PUSH=${{ github.event.head_commit.id }}
           CI_SHA_WORKFLOW_RUN=${{ github.event.workflow_run.head_sha }}
-          CI_COMMIT_URL_PUSH=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.head_commit.id }}
-          CI_COMMIT_URL_WORKFLOW_RUN=https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.workflow_run.head_sha }}
           echo $CI_BRANCH_PUSH
           echo $CI_BRANCH_WORKFLOW_RUN
           echo $CI_SHA_PUSH
-          echo $CI_SHA_WORKFLOW_RUN
-          echo $CI_COMMIT_URL_PUSH
-          echo $CI_COMMIT_URL_WORKFLOW_RUN          
+          echo $CI_SHA_WORKFLOW_RUN       
           [[ ! -z "$CI_BRANCH_PUSH" ]] && echo "CI_BRANCH=$CI_BRANCH_PUSH" >> $GITHUB_ENV || echo "CI_BRANCH=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
           [[ ! -z "$CI_SHA_PUSH" ]] && echo "CI_SHA=$CI_SHA_PUSH" >> $GITHUB_ENV || echo "CI_SHA=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
-          [[ ! -z "$CI_SHA_PUSH" ]] && echo "CI_COMMIT_URL=$CI_COMMIT_URL_PUSH" >> $GITHUB_ENV || echo "CI_COMMIT_URL=$CI_COMMIT_URL_WORKFLOW_RUN" >> $GITHUB_ENV
 
-      - name: print prepared ENV variables
+      - name: print environment variables
         run: |
           echo "env.CI_BRANCH = ${{ env.CI_BRANCH }}"
-          echo "env.CI_SHA = ${{ env.CI_SHA }}"
-          echo "env.CI_COMMIT_URL = ${{ env.CI_COMMIT_URL }}"
+          echo "env.CI_SHA = ${{ env.CI_SHA }}"         
 
       - name: Checkout transformers
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
 
-      - name: print transformers after actions/checkout@v2
+      - name: Update clone use environment variables
         run: |
-          echo "branch = $(git branch --show-current)"
-          echo "log = $(git log -n 1)"
-
-      - name: Update clone use prepared ENV variables
-        run: |
+          echo "original branch = $(git branch --show-current)"
           git fetch && git checkout ${{ env.CI_BRANCH }}
+          echo "updated branch = $(git branch --show-current)"
           git checkout ${{ env.CI_SHA }}
-
-      - name: print transformers  after updating clone using prepared ENV variables
-        run: |
-          echo "branch = $(git branch --show-current)"
           echo "log = $(git log -n 1)"
 
   send_results:
     name: Send results to webhook
     runs-on: ubuntu-latest
     if: always()
-    needs: [run_push_ci]
+    needs: [run_tests_single_gpu]
     steps:
-
-      - name: Prepare custom ENV variables
+      # Necessary to get the correct branch name and commit SHA for `workflow_run` event
+      # We also take into account the `push` event (we might want to test some changes in a branch)
+      - name: Prepare custom environment variables
+        shell: bash
         run: |
+          CI_BRANCH_PUSH=${{ github.event.ref }}
+          CI_BRANCH_PUSH=${CI_BRANCH_PUSH/'refs/heads/'/''}
+          CI_BRANCH_WORKFLOW_RUN=${{ github.event.workflow_run.head_branch }}
           CI_SHA_PUSH=${{ github.event.head_commit.id }}
           CI_SHA_WORKFLOW_RUN=${{ github.event.workflow_run.head_sha }}
+          echo $CI_BRANCH_PUSH
+          echo $CI_BRANCH_WORKFLOW_RUN
           echo $CI_SHA_PUSH
           echo $CI_SHA_WORKFLOW_RUN       
+          [[ ! -z "$CI_BRANCH_PUSH" ]] && echo "CI_BRANCH=$CI_BRANCH_PUSH" >> $GITHUB_ENV || echo "CI_BRANCH=$CI_BRANCH_WORKFLOW_RUN" >> $GITHUB_ENV
           [[ ! -z "$CI_SHA_PUSH" ]] && echo "CI_SHA=$CI_SHA_PUSH" >> $GITHUB_ENV || echo "CI_SHA=$CI_SHA_WORKFLOW_RUN" >> $GITHUB_ENV
 
-      - name: print prepared ENV variables
+      - name: print environment variables
         run: |
-          echo "CI_SHA = ${{ env.CI_SHA }}"
+          echo "env.CI_BRANCH = ${{ env.CI_BRANCH }}"
+          echo "env.CI_SHA = ${{ env.CI_SHA }}"
 
-      - name: Checkout transformers
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v2
+
+      - name: Update clone use environment variables
+        run: |
+          echo "original branch = $(git branch --show-current)"
+          git fetch && git checkout ${{ env.CI_BRANCH }}
+          echo "updated branch = $(git branch --show-current)"
+          git checkout ${{ env.CI_SHA }}
+          echo "log = $(git log -n 1)"
 
       - uses: actions/download-artifact@v2
-
       - name: Send message to Slack
         env:
           CI_EVENT: push
@@ -99,8 +96,4 @@ jobs:
         # We pass `needs.setup.outputs.matrix` as the argument. A processing in `notification_service.py` to change
         # `models/bert` to `models_bert` is required, as the artifact names use `_` instead of `/`.
         run: |
-          echo $CI_EVENT
-          echo $CI_SHA
-          echo $CI_TITLE_PUSH
-          echo $CI_TITLE_WORKFLOW_RUN
           python utils/notification_service.py

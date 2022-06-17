@@ -595,33 +595,42 @@ if __name__ == "__main__":
     repository_full_name = f"{org}/{repo}"
     # ====================================================================================================
 
+    org = "ydshieh"
+    repo = "github-actions-test"
+    repository_full_name = f"{org}/{repo}"
+
     # This env. variable is set in workflow file (under the job `send_results`).
     ci_event = os.environ["CI_EVENT"]
-
-    # ====================================================================================================
 
     # To find the PR number in a commit title, for example, `Add AwesomeFormer model (#99999)`
     pr_number_re = re.compile(r"\(#(\d+)\)$")
 
     title = f"🤗 Results of the {ci_event} tests."
-    # Add PR title with a link for push CI
+    # Add Commit/PR title with a link for push CI
+    # (check the title in 2 env. variables - depending on the CI is triggered via `push` or `workflow_run` event)
     ci_title_push = os.environ.get("CI_TITLE_PUSH")
     ci_title_workflow_run = os.environ.get("CI_TITLE_WORKFLOW_RUN")
     ci_title = ci_title_push if ci_title_push else ci_title_workflow_run
 
+    print(f"ci_title_push = {ci_title_push}")
+    print(f"ci_title_workflow_run = {ci_title_workflow_run}")
+    print(f"ci_title = {ci_title}")
+
     ci_sha = os.environ.get("CI_SHA")
+
+    print(f"ci_sha = {ci_sha}")
 
     ci_url = None
     if ci_sha:
         ci_url = f"https://github.com/{repository_full_name}/commit/{ci_sha}"
 
-    ####################
-    print(f"ci_title: {ci_title}")
-    print(f"ci_url: {ci_url}")
+        print(f"ci_url = {ci_url}")
 
     if ci_title is not None:
         assert ci_url is not None
         ci_title = ci_title.strip().split("\n")[0].strip()
+
+        print(f"ci_title = {ci_title}")
 
         # Retrieve the PR title and author login to complete the report
         commit_number = ci_url.split("/")[-1]
@@ -633,13 +642,11 @@ if __name__ == "__main__":
         # Find the PR number (if any) and change the url to the actual PR page.
         numbers = pr_number_re.findall(ci_title)
 
-        ####################
-        print(f"ci_title: {ci_title}")
-        print(f"commit_number: {commit_number}")
-        print(f"ci_detail_url: {ci_detail_url}")
-        print(f"ci_details: {ci_details}")
-        print(f"ci_author: {ci_author}")
-        print(f"numbers: {numbers}")
+        print(f"commit_number = {commit_number}")
+        print(f"ci_title = {ci_title}")
+        print(f"ci_detail_url = {ci_detail_url}")
+        print(f"ci_author = {ci_author}")
+        print(f"numbers = {numbers}")
 
         if len(numbers) > 0:
             pr_number = numbers[0]
@@ -651,229 +658,18 @@ if __name__ == "__main__":
 
             merged_by = ci_details["merged_by"]["login"]
 
-            ####################
-            print(f"pr_number: {pr_number}")
-            print(f"ci_detail_url: {ci_detail_url}")
-            print(f"ci_details: {ci_details}")
-            print(f"ci_author: {ci_author}")
-            print(f"ci_url: {ci_url}")
+            print(f"pr_number = {pr_number}")
+            print(f"ci_detail_url = {ci_detail_url}")
+            print(f"ci_author = {ci_author}")
+            print(f"ci_url = {ci_url}")
+            print(f"merged_by = {merged_by}")
 
         if merged_by is None:
             ci_title = f"<{ci_url}|{ci_title}>\nAuthor: {ci_author}"
         else:
             ci_title = f"<{ci_url}|{ci_title}>\nAuthor: {ci_author} | Merged by: {merged_by}"
 
-        ####################
-        print(f"ci_title: {ci_title}")
+        print(f"ci_title = {ci_title}")
 
     else:
         ci_title = ""
-
-    # ====================================================================================================
-    # Original
-    #
-    # arguments = sys.argv[1:][0]
-    # try:
-    #     models = ast.literal_eval(arguments)
-    #     # Need to change from elements like `models/bert` to `models_bert` (the ones used as artifact names).
-    #     models = [x.replace("models/", "models_") for x in models]
-    # except SyntaxError:
-    #     Message.error_out()
-    #     raise ValueError("Errored out.")
-    #
-    # github_actions_job_links = get_job_links()
-    # available_artifacts = retrieve_available_artifacts()
-    #
-    # modeling_categories = [
-    #     "PyTorch",
-    #     "TensorFlow",
-    #     "Flax",
-    #     "Tokenizers",
-    #     "Pipelines",
-    #     "Trainer",
-    #     "ONNX",
-    #     "Auto",
-    #     "Unclassified",
-    # ]
-    #
-    # # This dict will contain all the information relative to each model:
-    # # - Failures: the total, as well as the number of failures per-category defined above
-    # # - Success: total
-    # # - Time spent: as a comma-separated list of elapsed time
-    # # - Failures: as a line-break separated list of errors
-    # model_results = {
-    #     model: {
-    #         "failed": {m: {"unclassified": 0, "single": 0, "multi": 0} for m in modeling_categories},
-    #         "success": 0,
-    #         "time_spent": "",
-    #         "failures": {},
-    #     }
-    #     for model in models
-    #     if f"run_all_tests_gpu_{model}_test_reports" in available_artifacts
-    # }
-    #
-    # unclassified_model_failures = []
-    #
-    # for model in model_results.keys():
-    #     for artifact_path in available_artifacts[f"run_all_tests_gpu_{model}_test_reports"].paths:
-    #         artifact = retrieve_artifact(artifact_path["name"], artifact_path["gpu"])
-    #         if "stats" in artifact:
-    #             # Link to the GitHub Action job
-    #             model_results[model]["job_link"] = github_actions_job_links.get(
-    #                 # The job names use `matrix.folder` which contain things like `models/bert` instead of `models_bert`
-    #                 f"Model tests ({model.replace('models_', 'models/')}, {artifact_path['gpu']}-gpu)"
-    #             )
-    #
-    #             failed, success, time_spent = handle_test_results(artifact["stats"])
-    #             model_results[model]["success"] += success
-    #             model_results[model]["time_spent"] += time_spent[1:-1] + ", "
-    #
-    #             stacktraces = handle_stacktraces(artifact["failures_line"])
-    #
-    #             for line in artifact["summary_short"].split("\n"):
-    #                 if re.search("FAILED", line):
-    #
-    #                     line = line.replace("FAILED ", "")
-    #                     line = line.split()[0].replace("\n", "")
-    #
-    #                     if artifact_path["gpu"] not in model_results[model]["failures"]:
-    #                         model_results[model]["failures"][artifact_path["gpu"]] = []
-    #
-    #                     model_results[model]["failures"][artifact_path["gpu"]].append(
-    #                         {"line": line, "trace": stacktraces.pop(0)}
-    #                     )
-    #
-    #                     if re.search("test_modeling_tf_", line):
-    #                         model_results[model]["failed"]["TensorFlow"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("test_modeling_flax_", line):
-    #                         model_results[model]["failed"]["Flax"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("test_modeling", line):
-    #                         model_results[model]["failed"]["PyTorch"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("test_tokenization", line):
-    #                         model_results[model]["failed"]["Tokenizers"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("test_pipelines", line):
-    #                         model_results[model]["failed"]["Pipelines"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("test_trainer", line):
-    #                         model_results[model]["failed"]["Trainer"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("onnx", line):
-    #                         model_results[model]["failed"]["ONNX"][artifact_path["gpu"]] += 1
-    #
-    #                     elif re.search("auto", line):
-    #                         model_results[model]["failed"]["Auto"][artifact_path["gpu"]] += 1
-    #
-    #                     else:
-    #                         model_results[model]["failed"]["Unclassified"][artifact_path["gpu"]] += 1
-    #                         unclassified_model_failures.append(line)
-    #
-    # # Additional runs
-    # additional_files = {
-    #     "Examples directory": "run_examples_gpu",
-    #     "PyTorch pipelines": "run_tests_torch_pipeline_gpu",
-    #     "TensorFlow pipelines": "run_tests_tf_pipeline_gpu",
-    #     "Torch CUDA extension tests": "run_tests_torch_cuda_extensions_gpu_test_reports",
-    # }
-    #
-    # if ci_event == "push":
-    #     del additional_files["Examples directory"]
-    #     del additional_files["PyTorch pipelines"]
-    #     del additional_files["TensorFlow pipelines"]
-    #
-    # additional_results = {
-    #     key: {
-    #         "failed": {"unclassified": 0, "single": 0, "multi": 0},
-    #         "success": 0,
-    #         "time_spent": "",
-    #         "error": False,
-    #         "failures": {},
-    #         "job_link": github_actions_job_links.get(key),
-    #     }
-    #     for key in additional_files.keys()
-    # }
-    #
-    # for key in additional_results.keys():
-    #
-    #     # If a whole suite of test fails, the artifact isn't available.
-    #     if additional_files[key] not in available_artifacts:
-    #         additional_results[key]["error"] = True
-    #         continue
-    #
-    #     for artifact_path in available_artifacts[additional_files[key]].paths:
-    #         if artifact_path["gpu"] is not None:
-    #             additional_results[key]["job_link"] = github_actions_job_links.get(
-    #                 f"{key} ({artifact_path['gpu']}-gpu)"
-    #             )
-    #         artifact = retrieve_artifact(artifact_path["name"], artifact_path["gpu"])
-    #         stacktraces = handle_stacktraces(artifact["failures_line"])
-    #
-    #         failed, success, time_spent = handle_test_results(artifact["stats"])
-    #         additional_results[key]["failed"][artifact_path["gpu"] or "unclassified"] += failed
-    #         additional_results[key]["success"] += success
-    #         additional_results[key]["time_spent"] += time_spent[1:-1] + ", "
-    #
-    #         if len(artifact["errors"]):
-    #             additional_results[key]["error"] = True
-    #
-    #         if failed:
-    #             for line in artifact["summary_short"].split("\n"):
-    #                 if re.search("FAILED", line):
-    #                     line = line.replace("FAILED ", "")
-    #                     line = line.split()[0].replace("\n", "")
-    #
-    #                     if artifact_path["gpu"] not in additional_results[key]["failures"]:
-    #                         additional_results[key]["failures"][artifact_path["gpu"]] = []
-    #
-    #                     additional_results[key]["failures"][artifact_path["gpu"]].append(
-    #                         {"line": line, "trace": stacktraces.pop(0)}
-    #                     )
-    #
-    # # To find the PR number in a commit title, for example, `Add AwesomeFormer model (#99999)`
-    # pr_number_re = re.compile(r"\(#(\d+)\)$")
-    #
-    # title = f"🤗 Results of the {ci_event} tests."
-    # # Add PR title with a link for push CI
-    # ci_title = os.environ.get("CI_TITLE")
-    # ci_url = os.environ.get("CI_COMMIT_URL")
-    #
-    # if ci_title is not None:
-    #     assert ci_url is not None
-    #     ci_title = ci_title.strip().split("\n")[0].strip()
-    #
-    #     # Retrieve the PR title and author login to complete the report
-    #     commit_number = ci_url.split("/")[-1]
-    #     ci_detail_url = f"https://api.github.com/repos/huggingface/transformers/commits/{commit_number}"
-    #     ci_details = requests.get(ci_detail_url).json()
-    #     ci_author = ci_details["author"]["login"]
-    #
-    #     merged_by = None
-    #     # Find the PR number (if any) and change the url to the actual PR page.
-    #     numbers = pr_number_re.findall(ci_title)
-    #     if len(numbers) > 0:
-    #         pr_number = numbers[0]
-    #         ci_detail_url = f"https://api.github.com/repos/huggingface/transformers/pulls/{pr_number}"
-    #         ci_details = requests.get(ci_detail_url).json()
-    #
-    #         ci_author = ci_details["user"]["login"]
-    #         ci_url = f"https://github.com/huggingface/transformers/pull/{pr_number}"
-    #
-    #         merged_by = ci_details["merged_by"]["login"]
-    #
-    #     if merged_by is None:
-    #         ci_title = f"<{ci_url}|{ci_title}>\nAuthor: {ci_author}"
-    #     else:
-    #         ci_title = f"<{ci_url}|{ci_title}>\nAuthor: {ci_author} | Merged by: {merged_by}"
-    #
-    # else:
-    #     ci_title = ""
-    #
-    # message = Message(title, ci_title, model_results, additional_results)
-    #
-    # # send report only if there is any failure
-    # if message.n_failures:
-    #     message.post()
-    #     message.post_reply()
