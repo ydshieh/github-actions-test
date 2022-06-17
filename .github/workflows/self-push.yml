@@ -5,9 +5,9 @@ on:
     workflows: ["Self-hosted runner (push-caller)"]
     branches: ["main", "bonbon-none"]
     types: [completed]
-#  push:
-#    branches:
-#      - main
+  push:
+    branches:
+      - main
 
 jobs:
   run_tests_single_gpu:
