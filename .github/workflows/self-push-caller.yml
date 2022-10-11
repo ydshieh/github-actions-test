@@ -1,4 +1,4 @@
-# fef Used to trigger self-push CI
+# a Used to trigger self-push CI
 name: Self-hosted runner (push-caller)
 
 on:
@@ -14,4 +14,4 @@ jobs:
       - name: Check branch
         run: |
           echo "${{ github.sha }}"
-          sleep 60
+          sleep 90
