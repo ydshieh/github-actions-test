@@ -5,33 +5,12 @@ on:
   push:
     branches:
       - main
-      - bonbon-none
 
 jobs:
   call_push_ci:
-    name: Call Push CI 2345
+    name: Call Push CI
     runs-on: ubuntu-latest
     steps:
       - name: Check branch
         run: |
           echo "${{ github.sha }}"
-
-        # run: echo "${{ toJson(github.event) }}"
-
-#      - name: Checkout transformers
-#        run: |
-#          echo "Trigger push CI via workflow_run"
-#          echo "commit message"
-#          echo "${{ github.event.head_commit.message }}"
-#          echo "commit url"
-#          echo ${{ github.event.head_commit.url }}
-#
-#      - name: Checkout transformers
-#        uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 2
-#
-#      - name: print transformers
-#        run: |
-#          echo $(git branch)
-#          echo $(git log -n 1)
