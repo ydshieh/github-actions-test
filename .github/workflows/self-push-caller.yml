@@ -1,4 +1,4 @@
-# ef Used to trigger self-push CI
+# fef Used to trigger self-push CI
 name: Self-hosted runner (push-caller)
 
 on:
