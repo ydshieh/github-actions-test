@@ -1,4 +1,4 @@
-# d Used to trigger self-push CI
+# c Used to trigger self-push CI
 name: Self-hosted runner (push-caller)
 
 on:
