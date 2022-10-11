@@ -61,7 +61,7 @@ jobs:
           echo "original commit = $(git log -n 5)"
           git fetch && git checkout ${{ env.CI_BRANCH }}
           echo "updated branch = $(git branch --show-current)"
-          echo "branch commit = $(git log -n 1)"          
+          echo "branch commit = $(git log -n 5)"          
           git checkout ${{ env.CI_SHA }}
           echo "log = $(git log -n 1)"
 
