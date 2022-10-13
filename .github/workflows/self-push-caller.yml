@@ -10,7 +10,7 @@ jobs:
 
   trigger:
     if: github.event_name == 'push'
-    uses: ./.github/workflows/push_workflow_run.yml
+    uses: ./.github/workflows/push_workflow_call.yml
     secrets: inherit
 
   call_push_ci:
