@@ -1,0 +1,13 @@
+name: Workflow Call
+
+on:
+  workflow_call:
+
+jobs:
+  workflow_call_event:
+    name: "workflow_call_event"
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Echo event type
+        run: echo "${{ github.event_name }}"

@@ -21,6 +21,9 @@ jobs:
   run_tests_single_gpu:
     runs-on: ubuntu-latest
     steps:
+      -
+        name: Echo event type
+        run: echo "${{ github.event_name }}"
       # Necessary to get the correct branch name and commit SHA for `workflow_run` event
       # We also take into account the `push` event (we might want to test some changes in a branch)
       - name: Prepare custom environment variables

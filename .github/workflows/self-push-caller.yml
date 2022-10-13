@@ -7,11 +7,18 @@ on:
       - main
 
 jobs:
+
+  trigger:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/push_workflow_run.yml
+    secrets: inherit
+
   call_push_ci:
     name: Call Push CI
     runs-on: ubuntu-latest
     steps:
       - name: Check branch
         run: |
+          echo "${{ github.event_name }}"
           echo "${{ github.sha }}"
           sleep 90
